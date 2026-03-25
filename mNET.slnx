@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Samples/">
+    <File Path="SampleProtocol.json" />
+  </Folder>
+  <Project Path="JSONLib/JSONLib/JSONLib.vcxproj" Id="d272700a-4fbe-4191-b41c-36a830c1e2ce" />
+  <Project Path="mNET.Core/mNET.Core.vcxproj" Id="051c525b-f04e-49ac-a5a2-51d41d13630b" />
+  <Project Path="mNET.Generator/mNET.Generator.vcxproj" Id="ad88d2b8-de49-4bfe-bc42-c1ce0eab1ce5">
+    <BuildDependency Project="JSONLib/JSONLib/JSONLib.vcxproj" />
+    <BuildDependency Project="mNET.Core/mNET.Core.vcxproj" />
+  </Project>
+</Solution>

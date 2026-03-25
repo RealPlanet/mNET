@@ -1,0 +1,56 @@
+{
+    "Name": "UserSubscriptionService",
+    "Messages": [
+        {
+            "Name": "SubscribeUserRequest",
+            "Type": 1,
+            "Fields": [
+                {
+                    "Type": "string",
+                    "Name": "UserName"
+                },
+                {
+                    "Type": "string",
+                    "Name": "Password"
+                }
+            ]
+        },
+        {
+            "Name": "SubscribeUserReply",
+            "Type": 2,
+            "Fields": [
+                {
+                    "Type": "string",
+                    "Name": "UserID"
+                }
+            ]
+        },
+        {
+            "Name": "LoginRequest",
+            "Type": 3,
+            "Fields": [
+                {
+                    "Type": "string",
+                    "Name": "UserName"
+                },
+                {
+                    "Type": "string",
+                    "Name": "Password"
+                }
+            ]
+        },
+        {
+            "Name": "LoginReply",
+            "Type": 4,
+            "Fields": [
+                {
+                    "Type": "bool",
+                    "Name": "IsLoggedIn"
+                }
+            ]
+        }
+    ],
+    "AdditionalIncludes": [
+        "string"
+    ]
+}
