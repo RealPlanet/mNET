@@ -94,7 +94,6 @@ void OS_ProcessSocketData(AsyncSocket* server, AsyncPollInfo* info) {
 	}
 }
 
-
 #else
 #error NO_ARCHITECTURE_SET
 #endif // _WIN32
@@ -110,6 +109,7 @@ AsyncSocket::~AsyncSocket()
 {
 	OS_StopPolling(m_pPollingInfo);
 	delete m_pPollingInfo;
+	m_internalThread.join();
 }
 
 void AsyncSocket::BeginListening()
