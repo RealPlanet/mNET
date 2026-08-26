@@ -59,8 +59,8 @@ namespace mnet {
 		DLL_API void SendToClient(std::vector<char> data, Socket* client = nullptr);
 		DLL_API std::vector<char> Receive(size_t bufferLen = 512);
 
-		DLL_API virtual void OnClientConnected(Socket* sock) {}
-		DLL_API virtual void OnClientDisconnected(Socket* sock) {}
+		DLL_API virtual void OnClientConnected(Socket* sock) { (void*)sock; }
+		DLL_API virtual void OnClientDisconnected(Socket* sock) { (void*)sock; }
 
 		DLL_API long GetInternalSocketHandle();
 	protected:
