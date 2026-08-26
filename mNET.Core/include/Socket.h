@@ -27,12 +27,21 @@ namespace mnet {
 		IPV6,
 	};
 
+	struct KeepAliveConfig
+	{
+		int IdleTime;
+		int ProbeInterval;
+		int ProbeCount;
+	};
+
 	struct SocketOptions
 	{
 		AddressFamily Family;
 		SocketProtocol Protocol;
 		std::string Address;
 		int Port;
+		bool EnableKeepAlive;
+		KeepAliveConfig KeepAliveCfg;
 	};
 
 	class Socket

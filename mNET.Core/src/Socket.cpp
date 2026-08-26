@@ -19,6 +19,38 @@ struct mnet::SocketImpl
 	unsigned long GetInternalHandle() const { return (unsigned long)Handle; }
 };
 
+static bool EnableKeepAlive(SOCKET sock, const KeepAliveConfig& options) {
+	bool bKeepAlive = TRUE;
+	auto err = setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE, (char*)&bKeepAlive, sizeof(bKeepAlive));
+	if (err != 0)
+	{
+		std::fprintf(stderr, "Error while enabling keep alive for socket: %d", err);
+		return false;
+	}
+
+	err = setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE, (char*)&options.IdleTime, sizeof options.IdleTime);
+	if (err != 0)
+	{
+		std::fprintf(stderr, "Error while enabling keep alive for socket: %d", err);
+		return false;
+	}
+
+	err = setsockopt(sock, IPPROTO_TCP, TCP_KEEPINTVL, (char*)&options.ProbeInterval, sizeof options.ProbeInterval);
+	if (err != 0)
+	{
+		std::fprintf(stderr, "Error while enabling keep alive for socket: %d", err);
+		return false;
+	}
+
+	err = setsockopt(sock, IPPROTO_TCP, TCP_KEEPCNT, (char*)&options.ProbeCount, sizeof options.ProbeCount);
+	if (err != 0)
+	{
+		std::fprintf(stderr, "Error while enabling keep alive for socket: %d", err);
+		return false;
+	}
+
+	return true;
+}
 
 static SocketImpl* OS_CreateSocket(SocketOptions options) {
 
@@ -62,7 +94,18 @@ static SocketImpl* OS_CreateSocket(SocketOptions options) {
 	SOCKET sock = socket(addrFamily, sockType, winProtocol);
 	if (sock == INVALID_SOCKET)
 	{
+		std::fprintf(stderr, "Error while creating socket %d\n", WSAGetLastError());
 		return nullptr;
+	}
+
+	if (options.Protocol == SocketProtocol::TCP &&
+		options.EnableKeepAlive)
+	{
+		if (!EnableKeepAlive(sock, options.KeepAliveCfg))
+		{
+			closesocket(sock);
+			return nullptr;
+		}
 	}
 
 	sockaddr_in serverAddr;
@@ -100,6 +143,7 @@ static int OS_BindAsServer(SocketImpl* socket) {
 
 	int bindResult = bind(socket->Handle, (sockaddr*)&(socket->SockAddr), sizeof(socket->SockAddr));
 	if (bindResult != 0) {
+		std::fprintf(stderr, "Server bind failed: %d\n", WSAGetLastError());
 		return bindResult;
 	}
 
@@ -125,6 +169,7 @@ static int OS_ReceiveData(SocketImpl* socket, char* buffer, size_t bufferLen) {
 static SocketImpl* OS_AcceptConnection(SocketImpl* socket) {
 	SOCKET newSocket = accept(socket->Handle, nullptr, nullptr);
 	if (newSocket == INVALID_SOCKET) {
+		std::fprintf(stderr, "Accept socket is invalid: %d", WSAGetLastError());
 		return nullptr;
 	}
 
