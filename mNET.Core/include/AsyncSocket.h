@@ -23,8 +23,8 @@ namespace mnet
 
         DLL_API void BeginListening();
 
-        virtual void OnClientConnected(Socket* sock) override;
-        virtual void OnClientDisconnected(Socket* sock) override;
+        DLL_API virtual void OnClientConnected(Socket* sock) override;
+        DLL_API virtual void OnClientDisconnected(Socket* sock) override;
 
     protected:
         DLL_API virtual void OnReceiveData(Socket* from, std::vector<char>& data) = 0;
