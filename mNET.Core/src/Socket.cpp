@@ -247,6 +247,11 @@ void Socket::Send(std::vector<char> data)
 	OS_SendData(m_pSocket, &data[0], data.size());
 }
 
+void Socket::Send(std::string& data)
+{
+	OS_SendData(m_pSocket, &data[0], data.size());
+}
+
 void Socket::SendToClient(std::vector<char> data, Socket* client)
 {
 	if (!IsServer()) {
@@ -277,6 +282,24 @@ std::vector<char> Socket::Receive(size_t bufferLen)
 
 	buffer.resize(bytesRead);
 	return buffer;
+}
+
+int mnet::Socket::GetPort()
+{
+	sockaddr_in address{};
+
+#ifdef _WIN32
+	int addressLength = sizeof(address);
+#else
+	socklen_t addressLength = sizeof(address);
+#endif
+
+	if (getsockname(m_pSocket->Handle, reinterpret_cast<sockaddr*>(&address), &addressLength) != 0)
+	{
+		return 0;
+	}
+
+	return ntohs(address.sin_port);
 }
 
 long Socket::GetInternalSocketHandle()

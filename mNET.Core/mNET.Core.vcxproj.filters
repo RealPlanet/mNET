@@ -25,9 +25,6 @@
     <Filter Include="Header Files\Server">
       <UniqueIdentifier>{f3d13f60-c6ac-419a-b169-323dc4ac927c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Client">
-      <UniqueIdentifier>{2953ccb4-4e1e-4a4b-8e43-de5e5f59fcf3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\mnet.h">
