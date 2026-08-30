@@ -247,7 +247,7 @@ void Socket::Send(std::vector<char> data)
 	OS_SendData(m_pSocket, &data[0], data.size());
 }
 
-void Socket::Send(std::string& data)
+void Socket::Send(const std::string& data)
 {
 	OS_SendData(m_pSocket, &data[0], data.size());
 }

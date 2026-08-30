@@ -65,7 +65,7 @@ namespace mnet {
 		DLL_API void Disconnect();
 		DLL_API Socket* GetClient(int handle);
 		DLL_API void Send(std::vector<char> data);
-		DLL_API void Send(std::string& data);
+		DLL_API void Send(const std::string& data);
 		DLL_API void SendToClient(std::vector<char> data, Socket* client = nullptr);
 		DLL_API std::vector<char> Receive(size_t bufferLen = 512);
 		DLL_API int GetPort();
