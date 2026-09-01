@@ -202,6 +202,7 @@ Socket::~Socket()
 
 	OS_CloseSocket(m_pSocket);
 	delete m_pSocket;
+	m_pSocket = nullptr;
 }
 
 Socket* Socket::Accept()

@@ -109,6 +109,7 @@ AsyncSocket::~AsyncSocket()
 {
 	OS_StopPolling(m_pPollingInfo);
 	delete m_pPollingInfo;
+	m_pPollingInfo = nullptr;
 	m_internalThread.join();
 }
 
@@ -154,7 +155,7 @@ void AsyncSocket::ListenThreadServer()
 
 	// Add self for polling
 	OS_AddSocketToPolling(m_pPollingInfo, GetInternalSocketHandle());
-	while (IsValid()) {
+	while (IsValid() && m_pPollingInfo) {
 		int result = OS_PollData(this, m_pPollingInfo);
 		if (result <= 0)
 		{
