@@ -56,7 +56,7 @@ namespace mnet {
 		DLL_API int OpenServer();
 		DLL_API int OpenClient();
 
-		bool IsValid() const { return m_pSocket != nullptr; }
+		bool IsValid() const;
 		bool IsServer() const { return m_bIsServer; }
 		bool IsClient() const { return m_bIsClient; }
 

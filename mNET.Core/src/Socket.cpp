@@ -227,8 +227,10 @@ bool Socket::DisconnectClient(Socket* sock)
 		return false;
 	}
 
-	OS_CloseSocket(sock->m_pSocket);
+	// We use the handle as reference in this call back
+	// First invoke the disconnection then close the socket for good
 	InvokeClientDisconnected(sock);
+	OS_CloseSocket(sock->m_pSocket);
 	delete sock;
 	return true;
 }
@@ -341,4 +343,18 @@ int Socket::OpenClient()
 	m_bIsClient = true;
 	m_bIsServer = false;
 	return OS_ConnectAsClient(m_pSocket);
+}
+
+bool Socket::IsValid() const
+{
+	if (m_pSocket == nullptr)
+	{
+		return false;
+	}
+
+#ifdef WIN32
+	return m_pSocket->Handle != INVALID_SOCKET;
+#else
+#error Unsupported platform
+#endif // WIN32
 }

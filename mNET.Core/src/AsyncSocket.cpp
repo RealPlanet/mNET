@@ -123,6 +123,16 @@ void AsyncSocket::BeginListening()
 	}
 }
 
+void mnet::AsyncSocket::BeginListeningSingle()
+{
+	if (IsClient()) {
+		BeginListening();
+	}
+	else if (IsServer()) {
+		m_internalThread = std::thread(&AsyncSocket::SingleListenThreadServer, this);
+	}
+}
+
 void AsyncSocket::OnClientConnected(Socket* sock)
 {
 	if (IsServer())
@@ -133,7 +143,7 @@ void AsyncSocket::OnClientConnected(Socket* sock)
 
 void AsyncSocket::OnClientDisconnected(Socket* sock)
 {
-	if (IsServer())
+	if (IsServer() && m_pPollingInfo)
 	{
 		OS_RemoveSocketFromPolling(m_pPollingInfo, sock->GetInternalSocketHandle());
 	}
@@ -216,6 +226,34 @@ void AsyncSocket::ListenThreadServer()
 
 		for (auto sock : socketsToConnect) {
 			InvokeClientConnected(sock);
+		}
+	}
+}
+
+void AsyncSocket::SingleListenThreadServer()
+{
+	// Add self for polling
+	// We dont use m_pPollingInfo but we still rely on it to understand when the object
+	// is being deconstructed
+	while (IsValid() && m_pPollingInfo) {
+		Socket* sock = Accept();
+		if (!sock)
+		{
+			// Nothing to do
+			continue;
+		}
+
+		InvokeClientConnected(sock);
+		while (sock && sock->IsValid())
+		{
+			auto bytes = sock->Receive();
+			if (bytes.size() <= 0) {
+				DisconnectClient(sock);
+				sock = nullptr;
+				continue;
+			}
+
+			OnReceiveData(sock, bytes);
 		}
 	}
 }
