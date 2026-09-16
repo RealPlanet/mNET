@@ -35,7 +35,7 @@ static void OS_AddSocketToPolling(AsyncPollInfo* pollingInfo, int socketHandle) 
 }
 
 static void OS_RemoveSocketFromPolling(AsyncPollInfo* pollingInfo, int socketHandle) {
-	auto fds = pollingInfo->FileDescriptors;
+	auto& fds = pollingInfo->FileDescriptors;
 	for (auto it = fds.begin(); it != fds.end(); ++it) {
 		if (it->fd == socketHandle) {
 			fds.erase(it);
