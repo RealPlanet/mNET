@@ -208,7 +208,6 @@ void AsyncSocket::ListenThreadServer()
 				continue;
 			}
 
-
 			auto bytes = sock->Receive();
 			if (bytes.size() <= 0) {
 				socketsToDisconnect.push_back(sock);

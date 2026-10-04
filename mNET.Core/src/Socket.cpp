@@ -197,6 +197,7 @@ Socket::Socket(SocketOptions options)
 Socket::~Socket()
 {
 	for (auto kvp : m_mClients) {
+		DisconnectClient(kvp.second);
 		delete kvp.second;
 	}
 
